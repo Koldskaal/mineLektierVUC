@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Skema</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='homeworktable.css')}}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <style>
+    .container {
+      max-width: 1000px;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      /* color: white; */
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container-fullwidth">
+    <div class "topsection">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5 justify-content-between">
+            <div><span class="custom-h2">Mine Lektier</span>
+            <span class="version-control">v0.1</span>
+          </div>
+          <form class="form-inline" action="" method="POST">
+              <div class="input-group mr-sm-2">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1"><i class="far fa-user"></i></span>
+                </div>
+                <label class="form-control"> aviv0001 </label>
+              </div>
+
+              <div class="form-group mr-sm-2 col-md-3">
+                <div class="input-group">
+                  <input type="number" class="form-control" name="days" value="7" min="5" max="14">
+                  <div class="input-group-append"><span class="input-group-text">Days</span></div>
+                </div>
+              </div>
+
+              <div class="form-group mr-sm-2">
+                <div class="input-group">
+                  <div class="input-group-prepend"><span class="input-group-text">From</span></div>
+                  <input type="date" class="form-control" name="date" id="datePicker">
+                </div>
+              </div>
+
+              <input type="submit" class="btn btn-primary mr-sm-2" id="submit">
+
+
+        </div>
+
+
+        </form>
+
+      </nav>
+    </div>
+    <div class="grid-container">
+      {% for k,v in sdata.items() %}
+
+      <div class="bigbox">
+        {% for i in v %}
+        {% for key in i %}
+        {% if key == 'Dag'%}
+        <div class="date">{{i[key]}}</div>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+
+        {% for i in v %}
+        {% for key in i %}
+        {% if key == 'Ugedag'%}
+        <div class="day">
+          <div class="day-bar"><span class="day-font">{{i['Ugedag']}}</span></div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+
+        {% for i in v %}
+        {% for key in i %}
+        {% if key != 'Ugedag' and key != 'Dag' and key != 'gap' %}
+        <div class="subject-bar">
+          <div class="subject-name">{{key}}</div>
+        </div>
+        <div class="homework-info">{% if i[key] %}{{i[key][0]|safe}}{% else %}Ingen Lektier{% endif %}</div>
+
+        {% endif %}
+
+        {% if key == 'gap' %}
+        {% if i[key] %}
+        <div class="gap-bar"> </div>
+        {% endif %}
+        {% endif %}
+
+        {% endfor %}
+        {% endfor %}
+      </div>
+
+      {% endfor %}
+    </div>
+
+
+
+
+    <br> {% for error in errors %}
+    <h4>{{ error }}</h4> {% endfor %}
+  </div>
+  <script>
+    document.getElementById('datePicker').valueAsDate = new Date();
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>
