@@ -114,4 +114,5 @@ class Samler():
         return box
 
 if __name__ == "__main__":
-    pprint(Samler('aviv0001', 'qwe123qwe').box_ordered())
+    import config
+    pprint(Samler(, ).box_ordered())

@@ -86,7 +86,7 @@ a {
   display: grid;
   justify-content: center;
   grid-gap: 10px;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 350px));
+  /* grid-template-columns: repeat(auto-fit, minmax(100px, 350px)); */
   /* grid-template-rows: auto auto 1fr 1fr 1fr auto auto; */
   grid-auto-flow: column dense;
 

@@ -6,7 +6,9 @@ class Config(object):
     DEBUG = False
     TESTING = False
     CSRF_ENABLED = True
-    SECRET_KEY = 'this-really-needs-to-be-changed'
+    SECRET_KEY = 'HASDHASDHASDH##'
+    USER = 'aviv0001'
+    PASSWORD  = 'qwe123qwe'
 
 
 class ProductionConfig(Config):
