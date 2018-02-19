@@ -7,8 +7,8 @@ class Config(object):
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = 'HASDHASDHASDH##'
-    USER = 'aviv0001'
-    PASSWORD  = 'qwe123qwe'
+    USER = ''
+    PASSWORD  = ''
 
 
 class ProductionConfig(Config):
