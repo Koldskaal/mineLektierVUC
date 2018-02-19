@@ -60,44 +60,43 @@
       </nav>
     </div>
     <div class="grid-container">
-      {% for k,v in sdata.items() %}
+      {% for k_date, v_date in sdata.items() %}
 
-      <div class="bigbox">
-        {% for i in v %}
-        {% for key in i %}
-        {% if key == 'Dag'%}
-        <div class="date">{{i[key]}}</div>
-        {% endif %}
-        {% endfor %}
+      <div class="bigbox" {% if v_date['Today'] %} id="today"{% endif %}>
+        {% for k, v in v_date.items() %}
+          {% if k == 'Dag'%}
+          <div class="date">{{v}}</div>
+          {% endif %}
         {% endfor %}
 
-        {% for i in v %}
-        {% for key in i %}
-        {% if key == 'Ugedag'%}
-        <div class="day">
-          <div class="day-bar"><span class="day-font">{{i['Ugedag']}}</span></div>
-        </div>
-        {% endif %}
-        {% endfor %}
+        {% for k, v in v_date.items() %}
+          {% if k == 'Ugedag'%}
+          <div class="day">
+            <div class="day-bar"><span class="day-font">{{v}}</span></div>
+          </div>
+          {% endif %}
         {% endfor %}
 
-        {% for i in v %}
-        {% for key in i %}
-        {% if key != 'Ugedag' and key != 'Dag' and key != 'gap' %}
-        <div class="subject-bar">
-          <div class="subject-name">{{key}}</div>
-        </div>
-        <div class="homework-info">{% if i[key] %}{{i[key][0]|safe}}{% else %}Ingen Lektier{% endif %}</div>
+        {% for k, v in v_date.items() %}
+          {% if k != 'Ugedag' and k != 'Dag' and k != 'gap' and k != 'Today' %}
+            <div class="subject-bar">
+              <div class="subject-name">{{k}}</div>
+            </div>
+            <div class="homework-info">
+              {% if v %}
+                {{v|safe}}
+              {% else %}
+                Ingen lektier
+              {% endif %}
+            </div>
+          {% endif %}
 
-        {% endif %}
+          {% if k == 'gap' %}
+            {% if v %}
+            <div class="gap-bar"> </div>
+            {% endif %}
+          {% endif %}
 
-        {% if key == 'gap' %}
-        {% if i[key] %}
-        <div class="gap-bar"> </div>
-        {% endif %}
-        {% endif %}
-
-        {% endfor %}
         {% endfor %}
       </div>
 

@@ -1,8 +1,11 @@
-from modules import login2
-from modules import loginGoogle
-#import login2
-#import loginGoogle
+try:
+    from modules import login2
+    from modules import loginGoogle
+except ImportError:
+    import login2
+    import loginGoogle
 import dateutil.parser
+import datetime
 import calendar
 import re
 from pprint import pprint
@@ -35,11 +38,6 @@ class Samler():
             self.gdata = loginGoogle.main(date=self.google_date, period_days=self.period_days)
             return self.gdata
         return self.gdata
-        """
-        TODO: Put data into day boxes for the html.
-        example - monday, has date, subjects, homeworks, maybe classroom,
-
-        """
 
     def get_assignments(self, reset=False):
         if not self.assignments or reset:
@@ -47,63 +45,73 @@ class Samler():
             return self.assignments
         return self.assignments
 
-    def box_ordered(self, ginfo=True, assinfo=False, reset=False):
+    def box_ordered(self, ginfo=True, ainfo=False, reset=False):
+        """ Taking the data and ordering into a dictionary that the html-page
+            can read to makes the boxes.
+        """
         box = {}
         later_date = []
         old_day = ""
         if ginfo:
+            # Calling the data from google's calendar API
             gdata = self.get_google_info(reset)
             for d in gdata:
+                # Converting date string to datetime objcet
                 date = dateutil.parser.parse(d['start'])
+                # Saving some variables that I need in the box
                 current_date = str(date.date())
                 current_day = date.day
-                if current_date not in box.keys():
-                    box[current_date] = []
-                    box[current_date].append({'Ugedag':translate[calendar.day_name[date.weekday()]]})
 
+                # Add the current date and the properties of it to box
+                # Only need to do this once
+                if current_date not in box.keys():
+                    box[current_date] = {}
+                    box[current_date]['Ugedag'] = translate[calendar.day_name[date.weekday()]]
+
+                    test_date = datetime.datetime.today().date() + datetime.timedelta(days=15)
+                    #logger.info(test_date + current_date)
+                    if str(test_date) == current_date:
+
+                        box[current_date]['Today'] = True
+
+                    # For adding "gap" between weekends
+                    # if old_day is needed because I don't have an old_day on first item
                     if old_day:
                         gap = int(current_day) - int(old_day)
                         if gap > 1:
-                            box[current_date].append({'Dag':date.day,
-                                                      'gap':True})
+                            box[current_date]['Dag'] = date.day
+                            box[current_date]['gap'] = True
                         else:
-                            box[current_date].append({'Dag':date.day,
-                                                      'gap':False})
+                            box[current_date]['Dag'] = date.day
+                            box[current_date]['gap'] = False
                     else:
-                        box[current_date].append({'Dag':date.day})
+                            box[current_date]['Dag'] = date.day
+                            box[current_date]['gap'] = False
 
+                # Getting the subject name and cutting the worthless bits off
                 subject = d.get('subject')
                 subject = subject.replace('1801', '')
                 subject = subject[8:]
-                #print(subject)
+
                 des = d.get('description')
+
+                # Flitering and replacing urls for html links
                 if des:
                     urls = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', des)
                     for url in urls:
                         des = des.replace(url, '<a href="{}" target="_blank">Klik her</a>'.format(url))
 
-                huh = next((item for item in box[current_date] if subject in item.keys()), None)
-                if huh:
-                    for n, i in enumerate(box[current_date]):
-                        if subject in i.keys():
-                            if des:
-                                i[subject].append(des)
+                # Adding homework to dict. None is added if there is none.
+                if subject in box[current_date].keys():
+                    if des:
+                        box[current_date][subject] += " | " + des
+
                 else:
-                    box[current_date].append({subject:[des]})
+                    box[current_date][subject] = des
 
                 old_day = date.day
 
-            # Adding line break between gaps
-            for index, dag in enumerate(later_date):
-                try:
-                    gap = int(later_date[index+1]) - int(dag)
-                except IndexError:
-                    logger.info("Reached end of list")
-                if gap > 1:
-                    logger.info("{} and {} is above 1".format(dag, later_date[index+1]))
-
-
         return box
 
-
-#pprint(Samler('aviv0001', 'qwe123qwe').box_ordered())
+if __name__ == "__main__":
+    pprint(Samler("", "").box_ordered())

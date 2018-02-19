@@ -12,12 +12,14 @@ logging.basicConfig(
     )
 logger = logging.getLogger(__name__)
 app = Flask(__name__)
+app.config.from_object('config.DevelopmentConfig')
+print(app.config['SECRET_KEY'])
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
     errors = []
     results = {}
-    c = Samler('aviv0001', 'qwe123qwe')
+    c = Samler('', '')
     sdata = {}
     if request.method == "POST":
         # get url that the user has entered
